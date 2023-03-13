@@ -1,32 +1,76 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include "constants.h"
+#include "cells/sand/sand.h"
+#include "cells/cell.h"
 #include "raylib.h"
 
-#ifdef __EMSCRIPTEN__
-#include "emscripten.h"
-#endif
+cell_t** init_world();
+void draw_world(cell_t** world, int height, int width);
 
-void frame() {
-    BeginDrawing();
+int main(void)
+{
+    cell_t **world = init_world();
 
-    ClearBackground(RAYWHITE);
 
-    DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+    //insert_sand(world, 100, 100);
 
-    EndDrawing();
-}
-
-int main(int argc, const char **argv) {
-    InitWindow(800, 450, "Raylib + Meson + C/C++");
-
+    Vector2 insert_pos = {0.0, 0.0};
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Window");
     SetTargetFPS(60);
 
-#ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(&frame, 0, 1);
-#else
-    while(!WindowShouldClose()) {
-        frame();
+    while (!WindowShouldClose())
+    {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            insert_pos = GetMousePosition();
+            insert_sand(world, (int) insert_pos.y, insert_pos.x);
+            printf("Inserted Sand!");
+        }
+
+        BeginDrawing();
+
+        draw_world(world, WORLD_SIZE, WORLD_SIZE);
+
+        EndDrawing();
     }
-#endif
+
     CloseWindow();
 
-    return 0;
+    return EXIT_SUCCESS;
+}
+
+cell_t** init_world()
+{
+
+  cell_t **world = malloc(WORLD_SIZE * sizeof(cell_t*));
+  for (int row = 0; row < WORLD_SIZE; row++)
+  {
+    world[row] = malloc(WORLD_SIZE * sizeof(cell_t));
+    for (int col = 0; col < WORLD_SIZE; col++)
+    {
+        world[row][col] = create_empty_cell(row, col);
+
+    }
+  }
+
+  return world;
+}
+
+void draw_world(cell_t** world, int height, int width)
+{
+    for (int row = 0; row < height; row++)
+    {
+        for(int col = 0; col < width; col++)
+        {
+            cell_t cell = world[row][col];
+            if (cell.type == SAND)
+            {
+                printf("FOUND SAND!\n");
+
+            }
+            DrawRectangle(row, col, 1, 1, cell.color);
+
+        }
+    }
+
 }

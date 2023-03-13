@@ -52,10 +52,15 @@ endif
 # Project files
 inc_dir = include_directories(
   'src',
+  'src/cells',
+  'src/cells/sand',
 )
 
 sources = files(
   'src/main.c',
+  'src/constants.h',
+  'src/cells/sand/sand.c',
+  'src/cells/cell.c',
 )
 
 executable('raylib-meson',
