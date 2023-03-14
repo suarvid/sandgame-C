@@ -3,7 +3,7 @@ project('raylib-meson', 'c', 'cpp')
 cc = meson.get_compiler('c')
 cxx = meson.get_compiler('cpp')
 
-c_args = ['-Wall', '-Wextra', '-O', '-g']
+c_args = ['-Wall', '-Wextra', '-Ofast', '-g']
 cpp_args = []
 link_args = []
 name_suffix = []

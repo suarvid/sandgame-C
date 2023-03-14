@@ -4,6 +4,7 @@
 #include "cells/sand/sand.h"
 #include "cells/cell.h"
 #include "raylib.h"
+// Note to self: Raylib origin in top-left corner (as usual)
 
 cell_t*** init_world();
 void draw_world(cell_t*** world, int height, int width);
@@ -12,9 +13,6 @@ void update_cells(cell_t*** world, int height, int width);
 int main(void)
 {
     cell_t ***world = init_world();
-
-
-    //insert_sand(world, 100, 100);
 
     Vector2 insert_pos = {0.0, 0.0};
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Window");

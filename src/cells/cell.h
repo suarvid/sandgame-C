@@ -8,6 +8,7 @@ typedef enum CellType
 {
     EMPTY,
     SAND,
+    WATER,
 } cellType_t;
 
 typedef struct cell
