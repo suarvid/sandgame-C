@@ -54,12 +54,14 @@ inc_dir = include_directories(
   'src',
   'src/cells',
   'src/cells/sand',
+  'src/cells/water',
 )
 
 sources = files(
   'src/main.c',
   'src/constants.h',
   'src/cells/sand/sand.c',
+  'src/cells/water/water.c',
   'src/cells/cell.c',
 )
 

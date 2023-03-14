@@ -2,17 +2,23 @@
 #include <stdio.h>
 #include "constants.h"
 #include "cells/sand/sand.h"
+#include "cells/water/water.h"
 #include "cells/cell.h"
 #include "raylib.h"
 // Note to self: Raylib origin in top-left corner (as usual)
 
+typedef void (*insert_cell_function_t)(cell_t***, int16_t, int16_t);
+
 cell_t*** init_world();
 void draw_world(cell_t*** world, int height, int width);
 void update_cells(cell_t*** world, int height, int width);
+insert_cell_function_t update_selected_cell_type(void (*insert_function)(cell_t***, int16_t, int16_t));
 
 int main(void)
 {
+
     cell_t ***world = init_world();
+    void (*insert_function)(cell_t***, int16_t, int16_t) = insert_sand;
 
     Vector2 insert_pos = {0.0, 0.0};
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Window");
@@ -21,10 +27,12 @@ int main(void)
     while (!WindowShouldClose())
     {
         update_cells(world, WORLD_SIZE, WORLD_SIZE);
+        insert_function = update_selected_cell_type(insert_function);
 
         if (IsKeyDown(KEY_SPACE)) {
             insert_pos = GetMousePosition();
-            insert_sand(world, (int) insert_pos.y, insert_pos.x);
+            //insert_sand(world, (int) insert_pos.y, insert_pos.x);
+            insert_function(world, (int) insert_pos.y, insert_pos.x);
         }
 
         BeginDrawing();
@@ -77,4 +85,22 @@ void update_cells(cell_t*** world, int height, int width)
             world[row][col]->update_function(world, world[row][col], row, col);
         }
     }
+}
+
+insert_cell_function_t update_selected_cell_type(void (*insert_function)(cell_t***, int16_t, int16_t)) 
+{
+    if (IsKeyDown(KEY_S))
+    {
+        //insert_function = insert_sand;
+        printf("Sand Selected\n");
+        return insert_sand;
+    }
+    if (IsKeyDown(KEY_W))
+    {
+        //insert_function = insert_water;
+        printf("Water Selected\n");
+        return insert_water;
+    }
+
+    return insert_function;
 }
