@@ -65,7 +65,7 @@ void draw_world(cell_t*** world, int height, int width)
         for(int col = 0; col < width; col++)
         {
             cell_t *cell = world[row][col];
-            DrawRectangle(row, col, CELL_SIDE_SIZE, CELL_SIDE_SIZE, cell->color);
+            DrawRectangle(col, row, CELL_SIDE_SIZE, CELL_SIDE_SIZE, cell->color);
 
         }
     }
