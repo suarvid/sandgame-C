@@ -15,7 +15,7 @@ cell_t *create_sand_cell()
   cell_p->type = SAND;
   cell_p->updated = false;
   cell_p->update_function = update_sand;
-  cell_p -> density = 2;
+  cell_p->density = 2;
 
   return cell_p;
 }
@@ -31,7 +31,7 @@ void update_sand(cell_t ***world, cell_t *self, int16_t row, int16_t col)
 {
   if (row + 1 < WORLD_SIZE)
   {
-    cell_t* down = world[row + 1][col];
+    cell_t *down = world[row + 1][col];
     if (down->type == EMPTY || down->density < self->density) // Check down
     {
       world[row + 1][col] = self;
@@ -39,20 +39,45 @@ void update_sand(cell_t ***world, cell_t *self, int16_t row, int16_t col)
       return;
     }
 
-    cell_t* down_left = world[row + 1][col - 1];
-    if (col - 1 >= 0 && down_left->type == EMPTY || down_left->density < self->density) // Check down-left
-    {
-      world[row + 1][col - 1] = self;
-      world[row][col] = create_empty_cell(row, col);
-      return;
-    }
+    int r = rand() % 2;
 
-    cell_t* down_right = world[row + 1][col + 1];
-    if (col + 1 < WORLD_SIZE && down_right->type == EMPTY || down_right->density < self->density) // Check down-right
+    if (r == 0)
     {
-      world[row + 1][col + 1] = self;
-      world[row][col] = create_empty_cell(row, col);
-      return;
+      if (!try_add_down_left(world, self, row, col))
+      {
+        try_add_down_right(world, self, row, col);
+      }
+    } else {
+      if (!try_add_down_right(world, self, row, col))
+      {
+        try_add_down_left(world, self, row, col);
+      }
     }
   }
+}
+
+bool try_add_down_left(cell_t ***world, cell_t *self, int16_t row, int16_t col)
+{
+  cell_t *down_left = world[row + 1][col - 1];
+  if (col - 1 >= 0 && down_left->type == EMPTY || down_left->density < self->density) // Check down-left
+  {
+    world[row + 1][col - 1] = self;
+    world[row][col] = create_empty_cell(row, col);
+    return true;
+  }
+
+  return false;
+}
+
+bool try_add_down_right(cell_t ***world, cell_t *self, int16_t row, int16_t col)
+{
+  cell_t *down_right = world[row + 1][col + 1];
+  if (col + 1 < WORLD_SIZE && down_right->type == EMPTY || down_right->density < self->density) // Check down-right
+  {
+    world[row + 1][col + 1] = self;
+    world[row][col] = create_empty_cell(row, col);
+    return true;
+  }
+
+  return false;
 }

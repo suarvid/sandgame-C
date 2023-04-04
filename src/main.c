@@ -13,6 +13,8 @@ cell_t ***init_world();
 void draw_world(cell_t ***world, int height, int width);
 void update_cells(cell_t ***world, int height, int width);
 insert_cell_function_t update_selected_cell_type(void (*insert_function)(cell_t ***, int16_t, int16_t));
+void print_cursor_position();
+int translate_to_world(float num);
 
 int main(void)
 {
@@ -20,9 +22,11 @@ int main(void)
     cell_t ***world = init_world();
     void (*insert_function)(cell_t ***, int16_t, int16_t) = insert_sand;
 
-    Vector2 insert_pos = {0.0, 0.0};
-    InitWindow(WORLD_SIZE, WORLD_SIZE, "Window");
-    SetTargetFPS(60);
+    Vector2 mouse_pos = {0.0, 0.0};
+    InitWindow(WORLD_RENDER_SIZE, WORLD_RENDER_SIZE, "Window");
+    SetTargetFPS(30);
+    int aligned_x = 0;
+    int aligned_y = 0;
 
     while (!WindowShouldClose())
     {
@@ -31,8 +35,10 @@ int main(void)
 
         if (IsKeyDown(KEY_SPACE))
         {
-            insert_pos = GetMousePosition();
-            insert_function(world, (int)insert_pos.y, insert_pos.x);
+            mouse_pos = GetMousePosition();
+            aligned_x = translate_to_world(mouse_pos.x);
+            aligned_y = translate_to_world(mouse_pos.y);
+            insert_function(world, aligned_y, aligned_x);
         }
 
         BeginDrawing();
@@ -60,6 +66,7 @@ cell_t ***init_world()
         }
     }
 
+    fprintf(stderr, "Initiated World\n");
     return world;
 }
 
@@ -70,7 +77,7 @@ void draw_world(cell_t ***world, int height, int width)
         for (int col = 0; col < width; col++)
         {
             cell_t *cell = world[row][col];
-            DrawRectangle(col, row, CELL_SIDE_SIZE, CELL_SIDE_SIZE, cell->color);
+            DrawRectangle(CELL_RENDER_SIZE * col, CELL_RENDER_SIZE * row, CELL_RENDER_SIZE, CELL_RENDER_SIZE, cell->color);
         }
     }
 }
@@ -102,4 +109,15 @@ insert_cell_function_t update_selected_cell_type(void (*insert_function)(cell_t 
     }
 
     return insert_function;
+}
+
+void print_cursor_position()
+{
+    Vector2 mouse_pos = GetMousePosition();
+    fprintf(stderr, "Mouse Position: %f, %f\n", mouse_pos.x, mouse_pos.y);
+}
+
+int translate_to_world(float num)
+{
+    return (int)(num / CELL_RENDER_SIZE);
 }

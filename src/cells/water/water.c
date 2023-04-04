@@ -43,7 +43,7 @@ bool update_water_falling(cell_t ***world, cell_t *self, int16_t row, int16_t co
     if (row + 1 < WORLD_SIZE)
     {
         cell_t *down = world[row + 1][col];
-        if (world[row + 1][col]->type == EMPTY) // Check down
+        if (down->type == EMPTY || down->density < self->density) // Check down
         {
             world[row + 1][col] = self;
             world[row][col] = create_empty_cell(row, col);
@@ -51,7 +51,7 @@ bool update_water_falling(cell_t ***world, cell_t *self, int16_t row, int16_t co
         }
 
         cell_t *down_left = world[row + 1][col - 1];
-        if (col - 1 >= 0 && down_left->type == EMPTY || down_left->density < self->density) // Check down-left
+        if ((col - 1 >= 0 && down_left->type == EMPTY) || down_left->density < self->density) // Check down-left
         {
             world[row + 1][col - 1] = self;
             world[row][col] = create_empty_cell(row, col);
@@ -59,7 +59,7 @@ bool update_water_falling(cell_t ***world, cell_t *self, int16_t row, int16_t co
         }
 
         cell_t *down_right = world[row + 1][col + 1];
-        if (col + 1 < WORLD_SIZE && down_right->type == EMPTY || down_right->density < self->density) // Check down-right
+        if ((col + 1 < WORLD_SIZE && down_right->type == EMPTY) || down_right->density < self->density) // Check down-right
         {
             world[row + 1][col + 1] = self;
             world[row][col] = create_empty_cell(row, col);

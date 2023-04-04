@@ -3,8 +3,8 @@ project('raylib-meson', 'c', 'cpp')
 cc = meson.get_compiler('c')
 cxx = meson.get_compiler('cpp')
 
-c_args = ['-Wall', '-Wextra', '-Ofast', '-g']
-cpp_args = []
+c_args = ['-Wall', '-Wextra', '-Ofast']
+debug_args = ['Wall', '-Wextra', '-g']
 link_args = []
 name_suffix = []
 dependencies = []
@@ -68,7 +68,6 @@ sources = files(
 executable('raylib-meson',
   sources,
   c_args: c_args,
-  cpp_args: cpp_args,
   dependencies: dependencies,
   include_directories: inc_dir,
   link_args: link_args,
