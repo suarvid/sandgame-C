@@ -15,6 +15,7 @@ cell_t *create_empty_cell(int row, int col)
     empty_cell->lifetime = -1,
     empty_cell->type = EMPTY;
     empty_cell->update_function = empty_update_function;
+    empty_cell->density = -1;
 
     return empty_cell;
 }

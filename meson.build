@@ -55,6 +55,7 @@ inc_dir = include_directories(
   'src/cells',
   'src/cells/sand',
   'src/cells/water',
+  'src/cells/wood',
 )
 
 sources = files(
@@ -62,6 +63,7 @@ sources = files(
   'src/constants.h',
   'src/cells/sand/sand.c',
   'src/cells/water/water.c',
+  'src/cells/wood/wood.c',
   'src/cells/cell.c',
 )
 

@@ -4,6 +4,7 @@
 #include "cells/sand/sand.h"
 #include "cells/water/water.h"
 #include "cells/cell.h"
+#include "cells/wood/wood.h"
 #include "raylib.h"
 // Note to self: Raylib origin in top-left corner (as usual)
 
@@ -33,7 +34,7 @@ int main(void)
         update_cells(world, WORLD_SIZE, WORLD_SIZE);
         insert_function = update_selected_cell_type(insert_function);
 
-        if (IsKeyDown(KEY_SPACE))
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
         {
             mouse_pos = GetMousePosition();
             aligned_x = translate_to_world(mouse_pos.x);
@@ -106,6 +107,11 @@ insert_cell_function_t update_selected_cell_type(void (*insert_function)(cell_t 
         // insert_function = insert_water;
         printf("Water Selected\n");
         return insert_water;
+    }
+    if (IsKeyDown(KEY_O))
+    {
+        printf("Wood Selected\n");
+        return insert_wood;
     }
 
     return insert_function;

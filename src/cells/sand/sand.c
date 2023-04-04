@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+static bool move_down_left(cell_t ***world, cell_t *self, int16_t row, int16_t col);
+static bool move_down_right(cell_t ***world, cell_t *self, int16_t row, int16_t col);
+static bool move_down(cell_t ***world, cell_t *self, int16_t row, int16_t col);
+
 cell_t *create_sand_cell()
 {
   cell_t *cell_p = malloc(sizeof(struct cell));
@@ -31,32 +35,42 @@ void update_sand(cell_t ***world, cell_t *self, int16_t row, int16_t col)
 {
   if (row + 1 < WORLD_SIZE)
   {
-    cell_t *down = world[row + 1][col];
-    if (down->type == EMPTY || down->density < self->density) // Check down
+    if (!move_down(world, self, row, col))
     {
-      world[row + 1][col] = self;
-      world[row][col] = create_empty_cell(row, col);
-      return;
-    }
+      int r = rand() % 2;
 
-    int r = rand() % 2;
-
-    if (r == 0)
-    {
-      if (!try_add_down_left(world, self, row, col))
+      if (r == 0)
       {
-        try_add_down_right(world, self, row, col);
+        if (!move_down_left(world, self, row, col))
+        {
+          move_down_right(world, self, row, col);
+        }
       }
-    } else {
-      if (!try_add_down_right(world, self, row, col))
+      else
       {
-        try_add_down_left(world, self, row, col);
+        if (!move_down_right(world, self, row, col))
+        {
+          move_down_left(world, self, row, col);
+        }
       }
     }
   }
 }
 
-bool try_add_down_left(cell_t ***world, cell_t *self, int16_t row, int16_t col)
+static bool move_down(cell_t ***world, cell_t *self, int16_t row, int16_t col)
+{
+  cell_t *down = world[row + 1][col];
+  if (down->type == EMPTY || down->density < self->density) // Check down
+  {
+    world[row + 1][col] = self;
+    world[row][col] = create_empty_cell(row, col);
+    return true;
+  }
+
+  return false;
+}
+
+static bool move_down_left(cell_t ***world, cell_t *self, int16_t row, int16_t col)
 {
   cell_t *down_left = world[row + 1][col - 1];
   if (col - 1 >= 0 && down_left->type == EMPTY || down_left->density < self->density) // Check down-left
@@ -69,7 +83,7 @@ bool try_add_down_left(cell_t ***world, cell_t *self, int16_t row, int16_t col)
   return false;
 }
 
-bool try_add_down_right(cell_t ***world, cell_t *self, int16_t row, int16_t col)
+static bool move_down_right(cell_t ***world, cell_t *self, int16_t row, int16_t col)
 {
   cell_t *down_right = world[row + 1][col + 1];
   if (col + 1 < WORLD_SIZE && down_right->type == EMPTY || down_right->density < self->density) // Check down-right
