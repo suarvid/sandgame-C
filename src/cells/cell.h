@@ -10,6 +10,7 @@ typedef enum CellType
     SAND,
     WATER,
     WOOD,
+    FIRE,
 } cellType_t;
 
 typedef struct cell

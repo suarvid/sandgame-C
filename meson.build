@@ -56,6 +56,7 @@ inc_dir = include_directories(
   'src/cells/sand',
   'src/cells/water',
   'src/cells/wood',
+  'src/cells/fire',
 )
 
 sources = files(
@@ -65,6 +66,8 @@ sources = files(
   'src/cells/water/water.c',
   'src/cells/wood/wood.c',
   'src/cells/cell.c',
+  'src/cells/fire/fire.c',
+  'src/utils.c',
 )
 
 executable('raylib-meson',

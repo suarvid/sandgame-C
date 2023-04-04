@@ -5,6 +5,7 @@
 #include "cells/water/water.h"
 #include "cells/cell.h"
 #include "cells/wood/wood.h"
+#include "cells/fire/fire.h"
 #include "raylib.h"
 // Note to self: Raylib origin in top-left corner (as usual)
 
@@ -25,7 +26,7 @@ int main(void)
 
     Vector2 mouse_pos = {0.0, 0.0};
     InitWindow(WORLD_RENDER_SIZE, WORLD_RENDER_SIZE, "Window");
-    SetTargetFPS(30);
+    SetTargetFPS(60);
     int aligned_x = 0;
     int aligned_y = 0;
 
@@ -90,6 +91,11 @@ void update_cells(cell_t ***world, int height, int width)
         for (int col = 0; col < width; col++)
         {
             world[row][col]->update_function(world, world[row][col], row, col);
+            world[row][col]->lifetime > 0 ? world[row][col]->lifetime-- : world[row][col]->lifetime;
+            if (world[row][col]->lifetime == 0) {
+                free(world[row][col]);
+                world[row][col] = create_empty_cell(row, col);
+            }
         }
     }
 }
@@ -113,6 +119,11 @@ insert_cell_function_t update_selected_cell_type(void (*insert_function)(cell_t 
         printf("Wood Selected\n");
         return insert_wood;
     }
+    if (IsKeyDown(KEY_F))
+    {
+        printf("Fire Selected\n");
+        return insert_fire;
+    }
 
     return insert_function;
 }
@@ -127,3 +138,4 @@ int translate_to_world(float num)
 {
     return (int)(num / CELL_RENDER_SIZE);
 }
+
