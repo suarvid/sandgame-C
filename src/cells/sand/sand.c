@@ -15,6 +15,7 @@ cell_t *create_sand_cell()
   cell_p->type = SAND;
   cell_p->updated = false;
   cell_p->update_function = update_sand;
+  cell_p -> density = 2;
 
   return cell_p;
 }
@@ -30,21 +31,24 @@ void update_sand(cell_t ***world, cell_t *self, int16_t row, int16_t col)
 {
   if (row + 1 < WORLD_SIZE)
   {
-    if (world[row + 1][col]->type == EMPTY) // Check down
+    cell_t* down = world[row + 1][col];
+    if (down->type == EMPTY || down->density < self->density) // Check down
     {
       world[row + 1][col] = self;
       world[row][col] = create_empty_cell(row, col);
       return;
     }
 
-    if (col - 1 >= 0 && world[row + 1][col - 1]->type == EMPTY) // Check down-left
+    cell_t* down_left = world[row + 1][col - 1];
+    if (col - 1 >= 0 && down_left->type == EMPTY || down_left->density < self->density) // Check down-left
     {
       world[row + 1][col - 1] = self;
       world[row][col] = create_empty_cell(row, col);
       return;
     }
 
-    if (col + 1 < WORLD_SIZE && world[row + 1][col + 1]->type == EMPTY) // Check down-right
+    cell_t* down_right = world[row + 1][col + 1];
+    if (col + 1 < WORLD_SIZE && down_right->type == EMPTY || down_right->density < self->density) // Check down-right
     {
       world[row + 1][col + 1] = self;
       world[row][col] = create_empty_cell(row, col);

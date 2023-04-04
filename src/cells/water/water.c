@@ -18,7 +18,7 @@ cell_t *create_water_cell()
     cell_p->type = WATER;
     cell_p->updated = false;
     cell_p->update_function = update_water;
-
+    cell_p -> density = 1;
     return cell_p;
 }
 
@@ -42,6 +42,7 @@ bool update_water_falling(cell_t ***world, cell_t *self, int16_t row, int16_t co
     // Check down
     if (row + 1 < WORLD_SIZE)
     {
+        cell_t *down = world[row + 1][col];
         if (world[row + 1][col]->type == EMPTY) // Check down
         {
             world[row + 1][col] = self;
@@ -49,14 +50,16 @@ bool update_water_falling(cell_t ***world, cell_t *self, int16_t row, int16_t co
             return true;
         }
 
-        if (col - 1 >= 0 && world[row + 1][col - 1]->type == EMPTY) // Check down-left
+        cell_t *down_left = world[row + 1][col - 1];
+        if (col - 1 >= 0 && down_left->type == EMPTY || down_left->density < self->density) // Check down-left
         {
             world[row + 1][col - 1] = self;
             world[row][col] = create_empty_cell(row, col);
             return true;
         }
 
-        if (col + 1 < WORLD_SIZE && world[row + 1][col + 1]->type == EMPTY) // Check down-right
+        cell_t *down_right = world[row + 1][col + 1];
+        if (col + 1 < WORLD_SIZE && down_right->type == EMPTY || down_right->density < self->density) // Check down-right
         {
             world[row + 1][col + 1] = self;
             world[row][col] = create_empty_cell(row, col);
@@ -72,7 +75,6 @@ void update_water_on_ground(cell_t ***world, cell_t *self, int16_t row, int16_t 
     // Check Right
     if (col + 1 < WORLD_SIZE && world[row][col + 1]->type == EMPTY)
     {
-        printf("Check right\n");
         world[row][col + 1] = self;
         world[row][col] = create_empty_cell(row, col);
     }

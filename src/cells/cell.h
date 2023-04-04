@@ -16,6 +16,7 @@ typedef struct cell
     bool updated;
     int8_t velocity;
     int8_t lifetime;
+    int8_t density;
     Color color;
     enum CellType type;
     void (*update_function)(struct cell***, struct cell*, int16_t, int16_t);
