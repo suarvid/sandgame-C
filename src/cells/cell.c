@@ -5,6 +5,8 @@
 #include "raylib.h"
 #include "cell.h"
 
+// TODO: Add a timer for when the cell should be updated
+// i.e. if the cell is wood, it should be updated every 5 ticks
 cell_t *create_empty_cell(int row, int col)
 {
 

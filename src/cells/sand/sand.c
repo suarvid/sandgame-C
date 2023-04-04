@@ -33,24 +33,28 @@ void insert_sand(cell_t ***world, int16_t row,
 
 void update_sand(cell_t ***world, cell_t *self, int16_t row, int16_t col)
 {
-  if (row + 1 < WORLD_SIZE)
+  for (int move = 0; move < self->velocity; move++)
   {
-    if (!move_down(world, self, row, col))
-    {
-      int r = rand() % 2;
 
-      if (r == 0)
+    if (row + 1 < WORLD_SIZE)
+    {
+      if (!move_down(world, self, row, col))
       {
-        if (!move_down_left(world, self, row, col))
+        int r = rand() % 2;
+
+        if (r == 0)
         {
-          move_down_right(world, self, row, col);
+          if (!move_down_left(world, self, row, col))
+          {
+            move_down_right(world, self, row, col);
+          }
         }
-      }
-      else
-      {
-        if (!move_down_right(world, self, row, col))
+        else
         {
-          move_down_left(world, self, row, col);
+          if (!move_down_right(world, self, row, col))
+          {
+            move_down_left(world, self, row, col);
+          }
         }
       }
     }
